@@ -17,8 +17,12 @@ def generateDBusServer(restart):
 	dir_path = os.path.dirname(os.path.abspath(__file__))
 	cmd = "sudo screen -d -m -S DBusServer bash -c 'sudo python "
 	cmd = cmd + dir_path + "/Subprograms/btk_server.py'"
+	os.system("sudo hciconfig hcio up")
+	os.system("sudo bluetoothctl discoverable on")
+	os.system("sudo bluetoothctl pairable on")
 	os.system(cmd)
 	os.system("sudo hciconfig hcio class 0x002540")
+	os.system("sudo hciconfig hcio name ScrollingPedal")
 
 def checkBluetoothConnection():
 	hcitoolconOutput = os.popen("hcitool con").read()
@@ -80,7 +84,9 @@ def generateDependenciesList():
 		["python-dev","install"],
 		["python-pip","install"],
 		["python-rpi.gpio","install"],
-		["screen","install"]]
+		["screen","install"],
+		["python-gtk2","install"]]
+
 def checkPipInstallation():
 	try:
 		import evdev
