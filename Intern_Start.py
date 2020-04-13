@@ -82,12 +82,11 @@ def generateDependenciesList():
 		["python-rpi.gpio","install"],
 		["screen","install"]]
 def checkPipInstallation():
-	pipOutputString = os.popen('python -c "import evdev"').read()
-	pipOutputArray = pipOutputString.split("\n",-1)
-	if "Traceback\t(most\trecent\tcall\tlast):" in pipOutputArray:
+	try:
+		import evdev
+	except ImportError:
 		return False
-	else:
-		return True
+	return True
 
 def runDependenciesInstallation():
 	os.system("sudo apt-get update")
