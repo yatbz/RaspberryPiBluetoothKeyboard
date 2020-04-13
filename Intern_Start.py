@@ -85,7 +85,8 @@ def generateDependenciesList():
 		["python-pip","install"],
 		["python-rpi.gpio","install"],
 		["screen","install"],
-		["python-gtk2","install"]]
+		["python-gtk2","install"],
+		["pi-bluetooth","install"]]
 
 def checkPipInstallation():
 	try:
@@ -97,7 +98,7 @@ def checkPipInstallation():
 def runDependenciesInstallation():
 	os.system("sudo apt-get update")
 	os.system("sudo apt-get upgrade")
-	os.system("sudo apt-get install python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen python-gtk2")
+	os.system("sudo apt-get install python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen python-gtk2 pi-bluetooth")
 
 def runPipDependenciesInstallation():
 	os.system("sudo pip install evdev")
@@ -114,13 +115,18 @@ def copyDBusFile():
 	os.system("sudo cp " + dir_path + " /etc/dbus-1/system.d/org.yaptb.btkbservice.conf")
 
 def checkInstallationRun():
+	install = False
 	print("Checking dependencies")
 	if not(checkInstallation()):
 		runDependenciesInstallation()
+		install = True
 	if not(checkPipInstallation()):
 		runPipDependenciesInstallation()
+		install = True
 	if not(checkDBusFile()):
 		 copyDBusFile()
+		 install = True
+	return install
 
 def waitingForKeyboard():
 	print("Waiting for Keyboard")
