@@ -97,7 +97,7 @@ def checkPipInstallation():
 def runDependenciesInstallation():
 	os.system("sudo apt-get update")
 	os.system("sudo apt-get upgrade")
-	os.system("sudo apt-get install python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen")
+	os.system("sudo apt-get install python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen python-gtk2")
 
 def runPipDependenciesInstallation():
 	os.system("sudo pip install evdev")
