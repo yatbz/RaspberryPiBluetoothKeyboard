@@ -21,7 +21,6 @@ import time
 import bluetooth
 from bluetooth import *
 
-
 import gtk
 from dbus.mainloop.glib import DBusGMainLoop
 
