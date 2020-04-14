@@ -18,9 +18,9 @@ def generateDBusServer(restart):
 	dir_path = os.path.dirname(os.path.abspath(__file__))
 	cmd = "sudo screen -d -m -S DBusServer bash -c 'sudo python "
 	cmd = cmd + dir_path + "/Subprograms/btk_server.py'"
-	#os.system("sudo hciconfig hcio up")
 	os.system("sudo bluetoothctl agent off")
 	os.system("sudo bluetoothctl agent NoInputNoOutput")
+	os.system("sudo bluetoothctl power on")
 	os.system("sudo bluetoothctl discoverable on")
 	os.system("sudo bluetoothctl pairable on")
 	os.system(cmd)
