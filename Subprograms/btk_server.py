@@ -73,13 +73,11 @@ class BTKbBluezProfile(dbus.service.Object):
 class BTKbDevice():
     streamID = os.popen("bluetoothctl show | sed -n '1p' | sed 's/[^ ]*//' | awk '{print $1}'")
     MY_ADDRESS=streamID.read()
-    #-------------->Change Name<-------------------------#
-    MY_DEV_NAME="ScrollPedal"
 
     #define some constants
     P_CTRL =17  #Service port - must match port configured in SDP record
     P_INTR =19  #Service port - must match port configured in SDP record#Interrrupt port
-    PROFILE_DBUS_PATH="/bluez/yaptb/btkb_profile" #dbus path of  the bluez profile we will create
+    PROFILE_DBUS_PATH="/bluez/yatbz/btkb_profile" #dbus path of  the bluez profile we will create
     SDP_RECORD_PATH = sys.path[0] + "/sdp_record.xml" #file path of the sdp record to load
     UUID="00001124-0000-1000-8000-00805f9b34fb"
 
@@ -94,14 +92,6 @@ class BTKbDevice():
 
     #configure the bluetooth hardware device
     def init_bt_device(self):
-
-
-        print("Configuring for name "+BTKbDevice.MY_DEV_NAME)
-
-        #set the device class to a keybord and set the name
-	os.system("hciconfig hcio up")
-        os.system("hciconfig hcio class 0x002540")
-        os.system("hciconfig hcio name " + BTKbDevice.MY_DEV_NAME)
 
         #make the device discoverable
         os.system("hciconfig hcio piscan")
@@ -180,7 +170,7 @@ class BTKbDevice():
 
 
 #define a dbus service that emulates a bluetooth keyboard
-#this will enable different clients to connect to and use 
+#this will enable different clients to connect to and use
 #the service
 class  BTKbService(dbus.service.Object):
 
@@ -189,8 +179,8 @@ class  BTKbService(dbus.service.Object):
         print("Setting up service")
 
         #set up as a dbus service
-        bus_name=dbus.service.BusName("org.yaptb.btkbservice",bus=dbus.SystemBus())
-        dbus.service.Object.__init__(self,bus_name,"/org/yaptb/btkbservice")
+        bus_name=dbus.service.BusName("org.yatbz.dbusbtkeyboardgpioservice",bus=dbus.SystemBus())
+        dbus.service.Object.__init__(self,bus_name,"/org/yatbz/dbusbtkeyboardgpioservice")
 
         #create and setup our device
         self.device= BTKbDevice();
@@ -199,7 +189,7 @@ class  BTKbService(dbus.service.Object):
         self.device.listen();
 
 
-    @dbus.service.method('org.yaptb.btkbservice', in_signature='yay')
+    @dbus.service.method('org.yatbz.dbusbtkeyboardgpioservice', in_signature='yay')
     def send_keys(self,modifier_byte,keys):
 
         cmd_str=""

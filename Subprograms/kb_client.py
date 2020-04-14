@@ -48,8 +48,8 @@ class Keyboard():
 		print "setting up DBus Client"
 
 		self.bus = dbus.SystemBus()
-		self.btkservice = self.bus.get_object('org.yaptb.btkbservice','/org/yaptb/btkbservice')
-		self.iface = dbus.Interface(self.btkservice,'org.yaptb.btkbservice')
+		self.btkservice = self.bus.get_object('org.yatbz.dbusbtkeyboardgpioservice','/org/yatbz/dbusbtkeyboardgpioservice')
+		self.iface = dbus.Interface(self.btkservice,'org.yatbz.dbusbtkeyboardgpioservice')
 
 
 		print "waiting for keyboard"
