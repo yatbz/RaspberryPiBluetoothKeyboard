@@ -34,11 +34,24 @@ python SendString_Start.py "My String"
 Only one String can be send. 
 The receiving device is receiving each letter with a specified delay. This delay can be changed in Subprograms/send_string.py at KEY_DELAY. It is again in seconds.
 
-All scripts can be run in the background.
+All scripts can be run in the background. And using crontab:
+For crontab after reboot you have to enter the following command:
+@reboot sleep 3; screen -d -m -S "A name of your choice" bash -c "sudo python path/to/the/script"
+
+For changing the showen bluetooth name you have to edit Subprograms/main.conf Name
+
+
 For reseting the system the following commands have to be run:
 sudo pkill screen
+sudo pkill python
 sudo /etc/init.d/bluetooth start
-sudo rm /etc/dbus-1/system.d/org.yaptb.btkbservice.conf
+sudo rm /etc/dbus-1/system.d/org.yatbz.dbusbtkeyboardgpioservice.conf
+Edit /etc/bluetooth/main.conf and add # in front of 
+Name
+Class
+Pairable Timeout
+Discoverable Timeout
+
 
 
 This project is based on the work of:
