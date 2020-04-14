@@ -1,5 +1,6 @@
 import os
 import time
+import filecmp
 
 def generateBluetoothServer():
 	print("Generating specialized Bluetooth Server")
@@ -17,12 +18,12 @@ def generateDBusServer(restart):
 	dir_path = os.path.dirname(os.path.abspath(__file__))
 	cmd = "sudo screen -d -m -S DBusServer bash -c 'sudo python "
 	cmd = cmd + dir_path + "/Subprograms/btk_server.py'"
-	os.system("sudo hciconfig hcio up")
+	#os.system("sudo hciconfig hcio up")
+	os.system("sudo bluetoothctl agent off")
+	os.system("sudo bluetoothctl agent NoInputNoOutput")
 	os.system("sudo bluetoothctl discoverable on")
 	os.system("sudo bluetoothctl pairable on")
 	os.system(cmd)
-	os.system("sudo hciconfig hcio class 0x002540")
-	os.system("sudo hciconfig hcio name ScrollingPedal")
 
 def checkBluetoothConnection():
 	hcitoolconOutput = os.popen("hcitool con").read()
@@ -103,16 +104,21 @@ def runDependenciesInstallation():
 def runPipDependenciesInstallation():
 	os.system("sudo pip install evdev")
 
-def checkDBusFile():
-	if os.path.isfile("/etc/dbus-1/system.d/org.yaptb.btkbservice.conf"):
+def checkFiles():
+	dir_path = os.path.dirname(os.path.abspath(__file__))
+	dir_path = dir_path + "/Subprograms/main.conf"
+	if os.path.isfile("/etc/dbus-1/system.d/org.yatbz.dbusbtkeyboardgpioservice.conf") and filecmp.cmp("/etc/bluetooth/main.conf", dir_path):
 		return True
 	else:
 		return False
 
-def copyDBusFile():
+def copyFiles():
 	dir_path = os.path.dirname(os.path.abspath(__file__))
-	dir_path = dir_path + "/Subprograms/org.yaptb.btkbservice.conf"
-	os.system("sudo cp " + dir_path + " /etc/dbus-1/system.d/org.yaptb.btkbservice.conf")
+	dir_path = dir_path + "/Subprograms/org.yatbz.dbusbtkeyboardgpioservice.conf"
+	os.system("sudo cp " + dir_path + " /etc/dbus-1/system.d/org.yatbz.dbusbtkeyboardgpioservice.conf")
+	dir_path = os.path.dirname(os.path.abspath(__file__))
+        dir_path = dir_path + "/Subprograms/main.conf"
+	os.system("sudo cp -f " + dir_path + " /etc/bluetooth/main.conf")
 
 def checkInstallationRun():
 	install = False
@@ -123,8 +129,8 @@ def checkInstallationRun():
 	if not(checkPipInstallation()):
 		runPipDependenciesInstallation()
 		install = True
-	if not(checkDBusFile()):
-		 copyDBusFile()
+	if not(checkFiles()):
+		 copyFiles()
 		 install = True
 	return install
 
