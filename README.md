@@ -1,4 +1,4 @@
-This is a program which allows you to send keyboard entries live using bluetooth to a receiving device like PC or iPad.
+This is a program which allows you to send keyboard entries live using bluetooth to a receiving device like PC, iPad, Tablet PC or Smartphone.
 It is also possible to send defined key presses triggered by GPIO Pins. Another possible method is to send prepared strings.
 There for there are three different starting files:
 Keyboard_Start.py is for sending live Keyboard entries.
