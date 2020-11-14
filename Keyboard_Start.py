@@ -2,7 +2,7 @@ import os
 import Intern_Start as IS
 
 if (IS.checkInstallationRun()):
-	print("Dependencies installed")
+	print("Dependencies installed or configfile updated.")
 	print("Please start script again")
 else:
 	print("Starting GPIO reading")
