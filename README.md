@@ -14,9 +14,9 @@ GPIO_Start.py
 
 For using this script first GPIO pins and keys have to be defined.
 Therefor enter the folder "Subprograms" and open GPIO_Key.py .
-Inside the GPIOClient class you will find an a list called GPIOs.
+Inside the GPIOClient class you will find an array called GPIOs.
 Each entry (seperated by ,) represents a GPIO pin.
-Beneath is a list that is called connectedKeys.
+Beneath is an array that is called connectedKeys.
 If you want GPIO 26 to trigger KEY_PAGEDOWN the keyid for pagedown has to be in 
 the same index as the GPIO pin but in the connectedKeys list.
 You can find the keyid inside the same folder: keymap.py.
@@ -27,22 +27,24 @@ Here GPIOs are triggered if the voltage raises (maximum +3.3V).
 
 SendString_Start.py
 
-If you want to send a string you only have to run this script with
+If you want to send a string, you only have to run this script with
 python SendString_Start.py
 and add a string behind:
 python SendString_Start.py "My String"
 Only one String can be send. 
 The receiving device is receiving each letter with a specified delay. This delay can be changed in Subprograms/send_string.py at KEY_DELAY. It is again in seconds.
 
-All scripts can be run in the background using crontab:
-For running the script after reboot add the following line in crontab:
+All scripts can be run in the background using screen:
+
+screen -d -m -S "A name of your choice" bash -c "sudo python path/to/the/script"
+
+For running the script after reboot add the following line in crontab (enter "crontab -e" into bash for entering crontab):
 
 @reboot sleep 3; screen -d -m -S "A name of your choice" bash -c "sudo python path/to/the/script"
 
-For changing the shown bluetooth name you have to edit Subprograms/main.conf Name
+For changing the shown bluetooth name you have to edit at Subprograms/main.conf the variable "Name".
 
-
-For reseting the system right befor the first use of the script these commands have to be run:
+For removing all changes that has been made during the first run, you have to run:
 
 sudo pkill screen
 
