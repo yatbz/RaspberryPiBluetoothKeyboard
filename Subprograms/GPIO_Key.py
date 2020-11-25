@@ -62,19 +62,32 @@ class GPIOClient():
 		self.state[4]=0
 		self.send_key_dbus()
 		print "Key Up"
+		
+	def transmit_key(self, i):
+		if GPIO.input(self.GPIOs[i]):
+			self.transmit_key_down(self.connectedKeys[i])
+		else:
+			self.transmit_key_up()
+
+#	def event_loop(self):
+#		released = True
+#		while True:
+#			for i in range(0, len(self.GPIOs),1):
+#				if (GPIO.input(self.GPIOs[i]) == GPIO.HIGH and released):
+#					self.transmit_key_down(self.connectedKeys[i])
+#					time.sleep(self.REPEAT_KEY_DELAY)
+#					released = False
+#				elif (GPIO.input(self.GPIOs[i]) == GPIO.LOW and not(released)):
+#					self.transmit_key_up()
+#					time.sleep(self.REPEAT_KEY_DELAY)
+#					released = True
 
 	def event_loop(self):
-		released = True
+		for i in range(0, len(self.GPIOs), 1):
+			GPIO.add_event_detect(self.GPIOs[i], GPIO.BOTH, callback=lambda x: self.transmit_key(i))
 		while True:
-			for i in range(0, len(self.GPIOs),1):
-				if (GPIO.input(self.GPIOs[i]) == GPIO.HIGH and released):
-					self.transmit_key_down(self.connectedKeys[i])
-					time.sleep(self.REPEAT_KEY_DELAY)
-					released = False
-				elif (GPIO.input(self.GPIOs[i]) == GPIO.LOW and not(released)):
-					self.transmit_key_up()
-					time.sleep(self.REPEAT_KEY_DELAY)
-					released = True
+			time.sleep(300)
+
 
 if __name__ == "__main__":
 
