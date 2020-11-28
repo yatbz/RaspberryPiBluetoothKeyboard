@@ -5,7 +5,8 @@ import dbus.service
 import dbus.mainloop.glib
 import RPi.GPIO as GPIO
 import time
-import thread
+import _thread
+import asyncio
 
 class GPIOClient():
 	#------------------>CHANGE HERE<-------------------------#
@@ -35,16 +36,17 @@ class GPIOClient():
                     0x00,
                     0x00,
                     0x00]
-		print "Initializing GPIO"
+		print("Initializing GPIO")
 		GPIO.setmode(GPIO.BCM)
 		for i in range(0,len(self.GPIOs), 1):
 			GPIO.setup(self.GPIOs[i], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+			print("GPIO " + str(self.GPIOs[i]) + " initialized")
 
-		print " - setting up DBus Client"
+		print("-> setting up DBus Client")
 
 		self.bus = dbus.SystemBus()
-        	self.btkservice = self.bus.get_object('org.yatbz.dbusbtkeyboardgpioservice','/org/yatbz/dbusbtkeyboardgpioservice')
-        	self.iface = dbus.Interface(self.btkservice,'org.yatbz.dbusbtkeyboardgpioservice')
+		self.btkservice = self.bus.get_object('org.yatbz.dbusbtkeyboardgpioservice','/org/yatbz/dbusbtkeyboardgpioservice')
+		self.iface = dbus.Interface(self.btkservice,'org.yatbz.dbusbtkeyboardgpioservice')
 
 	def send_key_dbus(self):
 		bin_str=""
@@ -56,31 +58,18 @@ class GPIOClient():
 	def transmit_key_down(self, key_id):
 		self.state[4]=key_id
 		self.send_key_dbus()
-		print "Key Down"
+		print("Key Down")
 
 	def transmit_key_up(self):
 		self.state[4]=0
 		self.send_key_dbus()
-		print "Key Up"
-		
+		print("Key Up")
+
 	def transmit_key(self, i):
 		if GPIO.input(self.GPIOs[i]):
 			self.transmit_key_down(self.connectedKeys[i])
 		else:
 			self.transmit_key_up()
-
-#	def event_loop(self):
-#		released = True
-#		while True:
-#			for i in range(0, len(self.GPIOs),1):
-#				if (GPIO.input(self.GPIOs[i]) == GPIO.HIGH and released):
-#					self.transmit_key_down(self.connectedKeys[i])
-#					time.sleep(self.REPEAT_KEY_DELAY)
-#					released = False
-#				elif (GPIO.input(self.GPIOs[i]) == GPIO.LOW and not(released)):
-#					self.transmit_key_up()
-#					time.sleep(self.REPEAT_KEY_DELAY)
-#					released = True
 
 	def event_loop(self):
 		for i in range(0, len(self.GPIOs), 1):
@@ -88,12 +77,11 @@ class GPIOClient():
 		while True:
 			time.sleep(300)
 
-
 if __name__ == "__main__":
 
-	print "Settings up GPIO Bluetooth Keyboard emulator client"
+	print("Settings up GPIO Bluetooth Keyboard emulator client")
 
 	dc = GPIOClient()
 
-	print "starting event loop"
+	print("starting event loop")
 	dc.event_loop()

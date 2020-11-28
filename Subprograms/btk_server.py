@@ -1,11 +1,10 @@
 #!/usr/bin/python
 #
-# YAPTB Bluetooth keyboard emulator DBUS Service
+# YATBZ Bluetooth keyboard emulator DBUS Service
 #
 # Adapted from
 # www.linuxuser.co.uk/tutorials/emulate-bluetooth-keyboard-with-the-raspberry-pi
-#
-#
+
 
 #from __future__ import absolute_import, print_function, unicode_literals
 from __future__ import absolute_import, print_function
@@ -20,6 +19,8 @@ import dbus.mainloop.glib
 import time
 import bluetooth
 from bluetooth import *
+
+import zmq
 
 import gtk
 from dbus.mainloop.glib import DBusGMainLoop
@@ -89,6 +90,10 @@ class BTKbDevice():
         self.init_bt_device()
         self.init_bluez_profile()
 
+	print("Setting up socket for bluetoothstatus communication")
+	self.context = zmq.Context()
+    	self.socket = self.context.socket(zmq.PUSH)
+    	self.socket.bind("tcp://*:5555")
 
     #configure the bluetooth hardware device
     def init_bt_device(self):
@@ -143,7 +148,7 @@ class BTKbDevice():
     def listen(self):
 
         print("Waiting for connections")
-        self.scontrol=BluetoothSocket(L2CAP)
+	self.scontrol=BluetoothSocket(L2CAP)
         self.sinterrupt=BluetoothSocket(L2CAP)
 
         #bind these sockets to a port - port zero to select next available
@@ -160,6 +165,7 @@ class BTKbDevice():
         self.cinterrupt, cinfo = self.sinterrupt.accept()
         print ("Got a connection on the interrupt channel from " + cinfo[0])
 
+	self.socket.send(b"Connected")
 
     #send a string to the bluetooth host machine
     def send_string(self,message):
