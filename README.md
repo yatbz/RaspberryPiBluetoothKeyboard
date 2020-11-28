@@ -4,6 +4,9 @@ There for there are three different starting files:
 Keyboard_Start.py is for sending live Keyboard entries.
 GPIO_Start.py is for sending Keys triggered by GPIO.
 SendString_Start.py is responsible for sending a string.
+This program runs with python3 and python2.7.
+All startfiles have to be started with python3.
+Python2.7 is used internal.
 
 Keyboard_Start.py:
 
@@ -36,11 +39,11 @@ The receiving device is receiving each letter with a specified delay. This delay
 
 All scripts can be run in the background using screen:
 
-screen -d -m -S "A name of your choice" bash -c "sudo python path/to/the/script"
+screen -d -m -S "A name of your choice" bash -c "sudo python3 path/to/the/script"
 
 For running the script after reboot add the following line in crontab (enter "crontab -e" into bash for entering crontab):
 
-@reboot sleep 3; screen -d -m -S "A name of your choice" bash -c "sudo python path/to/the/script"
+@reboot sleep 3; screen -d -m -S "A name of your choice" bash -c "sudo python3 path/to/the/script"
 
 For changing the shown bluetooth name you have to edit at Subprograms/main.conf the variable "Name".
 
