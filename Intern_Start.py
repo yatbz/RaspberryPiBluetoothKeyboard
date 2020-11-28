@@ -94,7 +94,6 @@ def generateDependenciesList():
 def checkPipInstallation():
 	try:
 		import evdev
-		import asyncio
 		import RPi.GPIO
 		import zmq
 	except ImportError:
@@ -110,8 +109,6 @@ def runPipDependenciesInstallation():
 	os.system("sudo pip install evdev")
 	os.system("sudo pip install pyzmq")
 	os.system("sudo pip3 install evdev")
-	#os.system("sudo pip install asyncio")
-	os.system("sudo pip3 install asyncio")
 	os.system("sudo pip3 install RPi.GPIO")
 	os.system("sudo pip3 install pyzmq")
 
