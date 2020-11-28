@@ -14,7 +14,7 @@ def generateDBusServer(restart):
 	if not(restart):
 		print("Generating DBusServer")
 	else:
-		print(" - Generating DBusServer")
+		print(" -> Generating DBusServer")
 	dir_path = os.path.dirname(os.path.abspath(__file__))
 	cmd = "sudo screen -d -m -S DBusServer bash -c 'sudo python "
 	cmd = cmd + dir_path + "/Subprograms/btk_server.py'"
@@ -36,16 +36,16 @@ def checkBluetoothConnection():
 def generateGPIOKeyConverter():
 	print("Generating GPIO to Key Converter")
 	dir_path = os.path.dirname(os.path.abspath(__file__))
-	cmd = "sudo screen -d -m -S GPIOServer bash -c 'sudo python "
+	cmd = "sudo screen -d -m -S GPIOServer bash -c 'sudo python3 "
 	cmd = cmd + dir_path + "/Subprograms/GPIO_Key.py'"
 	os.system(cmd)
 
 def generateLiveKeyboard():
 	print("Generating live Keyboard")
 	dir_path = os.path.dirname(os.path.abspath(__file__))
-        cmd = "sudo screen -d -m -S KeyboardServer bash -c 'sudo python "
-        cmd = cmd + dir_path + "/Subprograms/kb_client.py'"
-        os.system(cmd)
+	cmd = "sudo screen -d -m -S KeyboardServer bash -c 'sudo python "
+	cmd = cmd + dir_path + "/Subprograms/kb_client.py'"
+	os.system(cmd)
 
 def checkDBusServer():
 	screenList = os.popen("sudo screen -ls").read()
@@ -68,12 +68,12 @@ def giveInstallationList():
 	tList = [None]
 	for i in range(0,len(installedDependenciesArrayRaw),1):
 		tList.extend(installedDependenciesArrayRaw[i].split("\t",-1))
-	tList = filter(None, tList)
+	tList = list(filter(None, tList))
 	finalList = [None]
 	for i in range(0,len(tList),2):
 		InternList = [tList[i], tList[i+1]]
 		finalList.append(InternList)
-	finalList = filter(None, finalList)
+	finalList = list(filter(None, finalList))
 	return finalList
 
 def generateDependenciesList():
@@ -87,11 +87,16 @@ def generateDependenciesList():
 		["python-rpi.gpio","install"],
 		["screen","install"],
 		["python-gtk2","install"],
-		["pi-bluetooth","install"]]
+		["pi-bluetooth","install"],
+		["python3-pip","install"]]
+
 
 def checkPipInstallation():
 	try:
 		import evdev
+		import asyncio
+		import RPi.GPIO
+		import zmq
 	except ImportError:
 		return False
 	return True
@@ -99,10 +104,16 @@ def checkPipInstallation():
 def runDependenciesInstallation():
 	os.system("sudo apt-get update")
 	os.system("sudo apt-get upgrade")
-	os.system("sudo apt-get install python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen python-gtk2 pi-bluetooth")
+	os.system("sudo apt-get install python3-pip python-gobject bluez bluez-tools bluez-firmware python-bluez python-dev python-pip python-rpi.gpio screen python-gtk2 pi-bluetooth")
 
 def runPipDependenciesInstallation():
 	os.system("sudo pip install evdev")
+	os.system("sudo pip install pyzmq")
+	os.system("sudo pip3 install evdev")
+	#os.system("sudo pip install asyncio")
+	os.system("sudo pip3 install asyncio")
+	os.system("sudo pip3 install RPi.GPIO")
+	os.system("sudo pip3 install pyzmq")
 
 def checkFiles():
 	dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -117,7 +128,7 @@ def copyFiles():
 	dir_path = dir_path + "/Subprograms/org.yatbz.dbusbtkeyboardgpioservice.conf"
 	os.system("sudo cp " + dir_path + " /etc/dbus-1/system.d/org.yatbz.dbusbtkeyboardgpioservice.conf")
 	dir_path = os.path.dirname(os.path.abspath(__file__))
-        dir_path = dir_path + "/Subprograms/main.conf"
+	dir_path = dir_path + "/Subprograms/main.conf"
 	os.system("sudo cp -f " + dir_path + " /etc/bluetooth/main.conf")
 
 def checkInstallationRun():

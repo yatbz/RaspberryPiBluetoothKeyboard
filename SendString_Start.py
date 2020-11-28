@@ -1,6 +1,7 @@
 import os
 import Intern_Start as IS
 import sys
+import zmq
 
 if (len(sys.argv) < 2):
 	print("No string to send provided")
@@ -13,12 +14,17 @@ else:
 		IS.generateBluetoothServer()
 		IS.generateDBusServer(False)
 		print("Waiting for connection")
-		while True:
-        		if IS.checkBluetoothConnection():
-                		print("Connected")
-                		IS.sendString(sys.argv)
-				break
 
-		os.system("sudo screen -XS DBusServer quit")
+		context = zmq.Context()
+		receiver = context.socket(zmq.PULL)
+		receiver.connect("tcp://127.0.0.1:5555")
+		print("-> Waiting for message from DBusServer")
+
+		message = (receiver.recv()).decode("utf-8")
+        	if (message == "Connected"):
+                	print(message)
+                	IS.sendString(sys.argv)
+
+		os.system("sudo pkill screen")
 		print("Connection closed")
 
